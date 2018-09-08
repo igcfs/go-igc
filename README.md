@@ -12,10 +12,37 @@ files.
 Forked from original project by [Ricardo Rocha](https://github.com/rochaporto) 
 [https://github.com/ezgliding/goigc](https://github.com/ezgliding/goigc)
 
+## Current version
+
+**v0.1.0**
+
+**Note**: the library status is *alpha*. The API is subject to 
+change. No backwards compatibility should be assumed. Use at your own risk.
+
+First stable release will be v1.0.0.
 
 ## Usage
 
-TBA
+```
+package main
+
+import (
+	"fmt"
+
+	"github.com/marni/goigc"
+)
+
+func main() {
+    s := "http://skypolaris.org/wp-content/uploads/IGS%20Files/Madrid%20to%20Jerez.igc"
+    track, err := igc.ParseLocation(s)
+    if err != nil {
+        fmt.Errorf("Problem reading the track", err)
+    }
+
+    fmt.Printf("Pilot: %s, gliderType: %s, date: %s", 
+        track.Pilot, track.GliderType, track.Date.String())
+}
+```
 
 ## Testing
 
@@ -27,3 +54,4 @@ go test -update .
 ## Documentation
 
     $ godoc github.com/marni/goigc
+

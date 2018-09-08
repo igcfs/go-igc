@@ -16,9 +16,7 @@
 
 package main
 
-import (
-	"log"
-)
+import "log"
 
 func main() {
 	log.SetPrefix("igctool: ")

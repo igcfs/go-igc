@@ -34,24 +34,29 @@ const (
 
 // ParseLocation returns a Track object corresponding to the given file.
 //
-// It calls Parse internatlly, so the file content should be in IGC format.
+// It calls Parse internally, so the file content should be in IGC format.
 func ParseLocation(location string) (Track, error) {
 	var content []byte
-	resp, err := http.Get(location)
+
 	// case http
-	if err == nil {
-		defer resp.Body.Close()
-		content, err = ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return Track{}, err
+	if strings.HasPrefix(location, "http") {
+		resp, err := http.Get(location)
+		if err == nil {
+			defer resp.Body.Close()
+			content, err = ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return Track{}, err
+			}
+			return Parse(string(content))
 		}
-	} else { // case file
-		resp, err := ioutil.ReadFile(location)
-		if err != nil {
-			return Track{}, err
-		}
-		content = resp
 	}
+
+	// let's try if it is local file
+	resp, err := ioutil.ReadFile(location)
+	if err != nil {
+		return Track{}, err
+	}
+	content = resp
 
 	return Parse(string(content))
 }
