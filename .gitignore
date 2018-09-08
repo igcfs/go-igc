@@ -1,4 +1,6 @@
 goigc
+goigc.iml
+.idea
 profile.cov
 cpu.pprof
 mem.pprof
