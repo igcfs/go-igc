@@ -11,6 +11,7 @@ require (
 	github.com/kylelemons/go-gypsy v0.0.0-20160905020020-08cad365cd28
 	github.com/lib/pq v0.0.0-20170707053602-dd1fe2071026
 	github.com/magiconair/properties v1.7.3
+	github.com/mattn/goveralls v0.0.2 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20170523030023-d0303fe80992
 	github.com/pelletier/go-toml v0.0.0-20170628012637-69d355db5304
 	github.com/spf13/afero v0.0.0-20170217164146-9be650865eab
@@ -22,5 +23,6 @@ require (
 	github.com/ziutek/mymysql v0.0.0-20170328153653-1d19cbf98d83
 	golang.org/x/sys v0.0.0-20170803140359-d8f5ea21b929
 	golang.org/x/text v0.0.0-20170730040918-3bd178b88a81
+	golang.org/x/tools v0.0.0-20180904205237-0aa4b8830f48 // indirect
 	gopkg.in/yaml.v2 v2.0.0-20170721122051-25c4ec802a7d
 )
