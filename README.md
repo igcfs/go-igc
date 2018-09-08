@@ -1,4 +1,6 @@
-# goigc [![Build Status](https://travis-ci.org/marni/goigc.svg?branch=master)](http://travis-ci.org/marni/goigc) 
+# goigc 
+
+[![Build Status](https://travis-ci.org/marni/goigc.svg?branch=master)](http://travis-ci.org/marni/goigc) 
 [![Coverage Status](https://coveralls.io/repos/github/marni/goigc/badge.svg?branch=master)](https://coveralls.io/github/marni/goigc?branch=master) 
 [![GoDoc](https://godoc.org/github.com/marni/goigc?status.png)](https://godoc.org/github.com/marni/goigc) [![Go 
 Report Card](https://goreportcard.com/badge/github.com/marni/goigc)](https://goreportcard.com/report/github.com/marni/goigc)
