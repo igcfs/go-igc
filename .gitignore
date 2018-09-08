@@ -1,4 +1,5 @@
-goigc
+./goigc
+./igctool
 goigc.iml
 .idea
 profile.cov
