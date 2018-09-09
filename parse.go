@@ -134,51 +134,66 @@ func (p *parser) parseA(line string, f *Track) error {
 	return nil
 }
 
-func (p *parser) parseB(line string, f *Track) error {
+func (p *parser) parseB(line string, f *Track) (err error) {
+	// handle all panic calls here
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
 	if len(line) < 35 {
-		return fmt.Errorf("line too short :: %v", line)
+		panic(fmt.Errorf("line too short :: %v", line))
 	}
+
 	pt := NewPointFromDMD(
 		line[7:15], line[15:24])
 
-	var err error
-	pt.Time, err = time.Parse(TimeFormat, line[1:7])
-	if err != nil {
-		return err
+	var e error
+	pt.Time, e = time.Parse(TimeFormat, line[1:7])
+	if e != nil {
+		panic(e)
 	}
 	if line[24] == 'A' || line[24] == 'V' {
 		pt.FixValidity = line[24]
 	} else {
-		return fmt.Errorf("invalid fix validity :: %v", line[24])
+		panic(fmt.Errorf("invalid fix validity :: %v", line[24]))
 	}
-	pt.PressureAltitude, err = strconv.ParseInt(line[25:30], 10, 64)
-	if err != nil {
-		return err
+	pt.PressureAltitude, e = strconv.ParseInt(line[25:30], 10, 64)
+	if e != nil {
+		panic(e)
 	}
-	pt.GNSSAltitude, err = strconv.ParseInt(line[30:35], 10, 64)
-	if err != nil {
-		return err
+	pt.GNSSAltitude, e = strconv.ParseInt(line[30:35], 10, 64)
+	if e != nil {
+		panic(e)
 	}
 	for _, f := range p.IFields {
 		pt.IData[f.tlc] = line[f.start-1 : f.end]
 	}
 	pt.NumSatellites = p.numSat
 	f.Points = append(f.Points, pt)
-	return nil
+	return
 }
 
-func (p *parser) parseC(lines []string, f *Track) error {
+func (p *parser) parseC(lines []string, f *Track) (err_ret error) {
+	// handle all panic calls here
+	defer func() {
+		if r := recover(); r != nil {
+			err_ret = r.(error)
+		}
+	}()
+
 	line := lines[0]
 	if len(line) < 25 {
-		return fmt.Errorf("wrong line size :: %v", line)
+		panic(fmt.Errorf("wrong line size :: %v", line))
 	}
 	var err error
 	var nTP int
 	if nTP, err = strconv.Atoi(line[23:25]); err != nil {
-		return fmt.Errorf("invalid number of turnpoints :: %v", line)
+		panic(fmt.Errorf("invalid number of turnpoints :: %v", line))
 	}
 	if len(lines) < 5+nTP {
-		return fmt.Errorf("invalid number of C record lines :: %v", lines)
+		panic(fmt.Errorf("invalid number of C record lines :: %v", lines))
 	}
 	if f.Task.DeclarationDate, err = time.Parse(DateFormat+TimeFormat, lines[0][1:13]); err != nil {
 		f.Task.DeclarationDate = time.Time{}
@@ -187,30 +202,30 @@ func (p *parser) parseC(lines []string, f *Track) error {
 		f.Task.Date = time.Time{}
 	}
 	if f.Task.Number, err = strconv.Atoi(line[19:23]); err != nil {
-		return err
+		panic(err)
 	}
 	f.Task.Description = line[25:]
 	if f.Task.Takeoff, err = p.taskPoint(lines[1]); err != nil {
-		return err
+		panic(err)
 	}
 	if f.Task.Start, err = p.taskPoint(lines[2]); err != nil {
-		return err
+		panic(err)
 	}
 	for i := 0; i < nTP; i++ {
 		var tp Point
 		if tp, err = p.taskPoint(lines[3+i]); err != nil {
-			return err
+			panic(err)
 		}
 		f.Task.Turnpoints = append(f.Task.Turnpoints, tp)
 	}
 	if f.Task.Finish, err = p.taskPoint(lines[3+nTP]); err != nil {
-		return err
+		panic(err)
 	}
 	if f.Task.Landing, err = p.taskPoint(lines[4+nTP]); err != nil {
-		return err
+		panic(err)
 	}
 	p.taskDone = true
-	return nil
+	return
 }
 
 func (p *parser) taskPoint(line string) (Point, error) {
@@ -302,15 +317,17 @@ func (p *parser) parseH(line string, f *Track) error {
 			f.Date, err = time.Parse(DateFormat, line[5:11])
 		case "FXA":
 			if len(line) < 8 {
-				return fmt.Errorf("line too short :: %v", line)
+				err = fmt.Errorf("line too short :: %v", line)
+			} else {
+				f.FixAccuracy, err = strconv.ParseInt(line[5:8], 10, 64)
 			}
-			f.FixAccuracy, err = strconv.ParseInt(line[5:8], 10, 64)
 		case "TZN":
 			z, errFloat := strconv.ParseFloat(stripUpTo(line[5:], ":"), 64)
 			if errFloat != nil {
-				return errFloat
+				err = errFloat
+			} else {
+				f.Timezone = int(z)
 			}
-			f.Timezone = int(z)
 		default:
 			err = fmt.Errorf("unknown record :: %v", line)
 		}
