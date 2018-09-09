@@ -77,8 +77,8 @@ func Parse(content string) (Track, error) {
 		'F': p.parseF,
 		'G': p.parseG,
 		'H': p.parseH,
-		'I': p.parseI,
-		'J': p.parseJ,
+		'I': parseIJ('I', &p),
+		'J': parseIJ('J', &p),
 		'K': p.parseK,
 		'L': p.parseL,
 	}
@@ -318,46 +318,32 @@ func (p *parser) parseH(line string, f *Track) error {
 	return err
 }
 
-func (p *parser) parseI(line string, t *Track) error {
-	if len(line) < 3 {
-		return fmt.Errorf("line too short :: %v", line)
+func parseIJ(ij byte, p *parser) func(string, *Track) error {
+	return func(line string, t *Track) error {
+		if len(line) < 3 {
+			return fmt.Errorf("line too short :: %v", line)
+		}
+		n, err := strconv.ParseInt(line[1:3], 10, 0)
+		if err != nil {
+			return fmt.Errorf("invalid number of %v fields :: %v", ij, line)
+		}
+		if len(line) != int(n*7+3) {
+			return fmt.Errorf("wrong line size :: %v", line)
+		}
+		for i := 0; i < int(n); i++ {
+			s := i*7 + 3
+			start, _ := strconv.ParseInt(line[s:s+2], 10, 0)
+			end, _ := strconv.ParseInt(line[s+2:s+4], 10, 0)
+			tlc := line[s+4 : s+7]
+			switch ij {
+			case 'I':
+				p.IFields = append(p.IFields, field{start: start, end: end, tlc: tlc})
+			case 'J':
+				p.JFields = append(p.JFields, field{start: start, end: end, tlc: tlc})
+			}
+		}
+		return nil
 	}
-	n, err := strconv.ParseInt(line[1:3], 10, 0)
-	if err != nil {
-		return fmt.Errorf("invalid number of I fields :: %v", line)
-	}
-	if len(line) != int(n*7+3) {
-		return fmt.Errorf("wrong line size :: %v", line)
-	}
-	for i := 0; i < int(n); i++ {
-		s := i*7 + 3
-		start, _ := strconv.ParseInt(line[s:s+2], 10, 0)
-		end, _ := strconv.ParseInt(line[s+2:s+4], 10, 0)
-		tlc := line[s+4 : s+7]
-		p.IFields = append(p.IFields, field{start: start, end: end, tlc: tlc})
-	}
-	return nil
-}
-
-func (p *parser) parseJ(line string, t *Track) error {
-	if len(line) < 3 {
-		return fmt.Errorf("line too short :: %v", line)
-	}
-	n, err := strconv.ParseInt(line[1:3], 10, 0)
-	if err != nil {
-		return fmt.Errorf("invalid number of J fields :: %v", line)
-	}
-	if len(line) != int(n*7+3) {
-		return fmt.Errorf("wrong line size :: %v", line)
-	}
-	for i := 0; i < int(n); i++ {
-		s := i*7 + 3
-		start, _ := strconv.ParseInt(line[s:s+2], 10, 0)
-		end, _ := strconv.ParseInt(line[s+2:s+4], 10, 0)
-		tlc := line[s+4 : s+7]
-		p.JFields = append(p.JFields, field{start: start, end: end, tlc: tlc})
-	}
-	return nil
 }
 
 func (p *parser) parseK(line string, f *Track) error {
