@@ -253,7 +253,7 @@ func (p *parser) parseF(line string, f *Track) error {
 	if err != nil {
 		return err
 	}
-	ids := make([]string, len(line))
+	ids := make([]string, 0)
 	for i := 7; i < len(line)-1; i = i + 2 {
 		ids = append(ids, line[i:i+2])
 	}
@@ -282,7 +282,6 @@ func (p *parser) parseH(line string, f *Track) error {
 		"RFW": &f.FirmwareVersion,
 		"RHW": &f.HardwareVersion,
 		"FTY": &f.FlightRecorder,
-		"GPS": &f.GPS,
 		"PRS": &f.PressureSensor,
 		"CID": &f.CompetitionID,
 		"CCL": &f.CompetitionClass,
@@ -294,6 +293,8 @@ func (p *parser) parseH(line string, f *Track) error {
 		*field = stripUpTo(line[5:], ":")
 	} else {
 		switch key {
+		case "GPS":
+			f.GPS = line[5:]
 		case "DTE":
 			if len(line) < 11 {
 				return fmt.Errorf("line too short :: %v", line)
