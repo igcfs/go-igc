@@ -6,7 +6,7 @@
 Report Card](https://goreportcard.com/badge/github.com/marni/goigc)](https://goreportcard.com/report/github.com/marni/goigc)
 ![Project Status](http://img.shields.io/badge/status-alpha-red.svg)
 
-Go library for processing and manipulating [IGC](http://www.fai.org/component/phocadownload/category/?download=5745:igc-flight-recorder-specification-edition-2-with-al1-2011-5-31) 
+Go library for processing and manipulating [IGC](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
 files.
 
 Forked from original project by [Ricardo Rocha](https://github.com/rochaporto) 
@@ -44,6 +44,11 @@ func main() {
 }
 ```
 
+
+## Resources
+
+
+
 ## Testing
 
 Tests rely on the golden files. To update the golden files, run the tests with the `-update` flag:
@@ -54,4 +59,10 @@ go test -update .
 ## Documentation
 
     $ godoc github.com/marni/goigc
+    
+* [Latest IGC technical spec](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf). 
+The IGC file specification is provided by FAI and IGC standarization committes and 
+should be used as a reference. See section A9 for the example of IGC file.
+* An example IGC files can be downloaded from [XContest.org](http://xcontest.org), eg. [a short flight](https://www.xcontest.org/track.php?t=1533585909.37.igc)
+* [IGC Waypoint format](https://www.fai.org/sites/default/files/documents/wpformat.pdf) (useful for fields specs)
 

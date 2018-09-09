@@ -66,9 +66,25 @@ func ParseLocation(location string) (Track, error) {
 // The value of content should be a text string with all the flight data
 // in the IGC format.
 func Parse(content string) (Track, error) {
+
+	p := parser{}
+
+	parsingDispath := map[byte]func(string, *Track) error{
+		'A': p.parseA,
+		'B': p.parseB,
+		'D': p.parseD,
+		'E': p.parseE,
+		'F': p.parseF,
+		'G': p.parseG,
+		'H': p.parseH,
+		'I': p.parseI,
+		'J': p.parseJ,
+		'K': p.parseK,
+		'L': p.parseL,
+	}
+
 	f := NewTrack()
 	var err error
-	p := parser{}
 	lines := strings.Split(content, "\n")
 	for i := range lines {
 		line := strings.TrimSpace(lines[i])
@@ -76,36 +92,17 @@ func Parse(content string) (Track, error) {
 		if len(strings.Trim(line, " ")) < 1 {
 			continue
 		}
-		switch line[0] {
-		case 'A':
-			err = p.parseA(line, &f)
-		case 'B':
-			err = p.parseB(line, &f)
-		case 'C':
+
+		if fn, ok := parsingDispath[line[0]]; ok {
+			err = fn(line, &f)
+		} else if line[0] == 'C' {
 			if !p.taskDone {
 				err = p.parseC(lines[i:], &f)
 			}
-		case 'D':
-			err = p.parseD(line, &f)
-		case 'E':
-			err = p.parseE(line, &f)
-		case 'F':
-			err = p.parseF(line, &f)
-		case 'G':
-			err = p.parseG(line, &f)
-		case 'H':
-			err = p.parseH(line, &f)
-		case 'I':
-			err = p.parseI(line)
-		case 'J':
-			err = p.parseJ(line)
-		case 'K':
-			err = p.parseK(line, &f)
-		case 'L':
-			err = p.parseL(line, &f)
-		default:
+		} else {
 			err = fmt.Errorf("invalid record :: %v", line)
 		}
+
 		if err != nil {
 			return f, err
 		}
@@ -256,7 +253,7 @@ func (p *parser) parseF(line string, f *Track) error {
 	if err != nil {
 		return err
 	}
-	ids := []string{}
+	ids := make([]string, len(line))
 	for i := 7; i < len(line)-1; i = i + 2 {
 		ids = append(ids, line[i:i+2])
 	}
@@ -276,58 +273,51 @@ func (p *parser) parseH(line string, f *Track) error {
 		return fmt.Errorf("line too short :: %v", line)
 	}
 
-	switch line[2:5] {
-	case "DTE":
-		if len(line) < 11 {
-			return fmt.Errorf("line too short :: %v", line)
-		}
-		f.Date, err = time.Parse(DateFormat, line[5:11])
-	case "FXA":
-		if len(line) < 8 {
-			return fmt.Errorf("line too short :: %v", line)
-		}
-		f.FixAccuracy, err = strconv.ParseInt(line[5:8], 10, 64)
-	case "PLT":
-		f.Pilot = stripUpTo(line[5:], ":")
-	case "CM2":
-		f.Crew = stripUpTo(line[5:], ":")
-	case "GTY":
-		f.GliderType = stripUpTo(line[5:], ":")
-	case "GID":
-		f.GliderID = stripUpTo(line[5:], ":")
-	case "DTM":
-		if len(line) < 8 {
-			return fmt.Errorf("line too short :: %v", line)
-		}
-		f.GPSDatum = stripUpTo(line[5:], ":")
-	case "RFW":
-		f.FirmwareVersion = stripUpTo(line[5:], ":")
-	case "RHW":
-		f.HardwareVersion = stripUpTo(line[5:], ":")
-	case "FTY":
-		f.FlightRecorder = stripUpTo(line[5:], ":")
-	case "GPS":
-		f.GPS = line[5:]
-	case "PRS":
-		f.PressureSensor = stripUpTo(line[5:], ":")
-	case "CID":
-		f.CompetitionID = stripUpTo(line[5:], ":")
-	case "CCL":
-		f.CompetitionClass = stripUpTo(line[5:], ":")
-	case "TZN":
-		z, err := strconv.ParseFloat(stripUpTo(line[5:], ":"), 64)
-		if err != nil {
-			return err
-		}
-		f.Timezone = int(z)
-	default:
-		err = fmt.Errorf("unknown record :: %v", line)
+	parsingDispath := map[string]*string{
+		"PLT": &f.Pilot,
+		"CM2": &f.Crew,
+		"GTY": &f.GliderType,
+		"GID": &f.GliderID,
+		"DTM": &f.GPSDatum,
+		"RFW": &f.FirmwareVersion,
+		"RHW": &f.HardwareVersion,
+		"FTY": &f.FlightRecorder,
+		"GPS": &f.GPS,
+		"PRS": &f.PressureSensor,
+		"CID": &f.CompetitionID,
+		"CCL": &f.CompetitionClass,
 	}
 
+	key := line[2:5]
+
+	if field, ok := parsingDispath[key]; ok {
+		*field = stripUpTo(line[5:], ":")
+	} else {
+		switch key {
+		case "DTE":
+			if len(line) < 11 {
+				return fmt.Errorf("line too short :: %v", line)
+			}
+			f.Date, err = time.Parse(DateFormat, line[5:11])
+		case "FXA":
+			if len(line) < 8 {
+				return fmt.Errorf("line too short :: %v", line)
+			}
+			f.FixAccuracy, err = strconv.ParseInt(line[5:8], 10, 64)
+		case "TZN":
+			z, errFloat := strconv.ParseFloat(stripUpTo(line[5:], ":"), 64)
+			if errFloat != nil {
+				return errFloat
+			}
+			f.Timezone = int(z)
+		default:
+			err = fmt.Errorf("unknown record :: %v", line)
+		}
+	}
 	return err
 }
 
-func (p *parser) parseI(line string) error {
+func (p *parser) parseI(line string, t *Track) error {
 	if len(line) < 3 {
 		return fmt.Errorf("line too short :: %v", line)
 	}
@@ -348,7 +338,7 @@ func (p *parser) parseI(line string) error {
 	return nil
 }
 
-func (p *parser) parseJ(line string) error {
+func (p *parser) parseJ(line string, t *Track) error {
 	if len(line) < 3 {
 		return fmt.Errorf("line too short :: %v", line)
 	}
