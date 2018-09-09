@@ -30,10 +30,9 @@ var (
 	tasktype []int
 )
 
-var optimizers = map[string]igc.Optimizer {
+var optimizers = map[string]igc.Optimizer{
 	"bf": igc.NewBruteForceOptimizer(false),
 }
-
 
 // optimizeCmd respresents the optimize command
 var optimizeCmd = &cobra.Command{
