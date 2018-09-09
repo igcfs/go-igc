@@ -175,11 +175,11 @@ func (p *parser) parseB(line string, f *Track) (err error) {
 	return
 }
 
-func (p *parser) parseC(lines []string, f *Track) (err_ret error) {
+func (p *parser) parseC(lines []string, f *Track) (errRet error) {
 	// handle all panic calls here
 	defer func() {
 		if r := recover(); r != nil {
-			err_ret = r.(error)
+			errRet = r.(error)
 		}
 	}()
 
