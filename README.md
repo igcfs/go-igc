@@ -1,10 +1,13 @@
-# goigc 
+# goigc
 
-[![Build Status](https://travis-ci.org/marni/goigc.svg?branch=master)](http://travis-ci.org/marni/goigc) 
+[![Build Status](https://travis-ci.org/marni/goigc.svg?branch=master)](http://travis-ci.org/marni/goigc)
 [![Coverage Status](https://coveralls.io/repos/github/marni/goigc/badge.svg?branch=master)](https://coveralls.io/github/marni/goigc?branch=master) 
 [![GoDoc](https://godoc.org/github.com/marni/goigc?status.png)](https://godoc.org/github.com/marni/goigc) [![Go 
 Report Card](https://goreportcard.com/badge/github.com/marni/goigc)](https://goreportcard.com/report/github.com/marni/goigc)
+[![Maintainability](https://api.codeclimate.com/v1/badges/37f1652a2d83bf0d3de4/maintainability)](https://codeclimate.com/github/marni/goigc/maintainability) 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/37f1652a2d83bf0d3de4/test_coverage)](https://codeclimate.com/github/marni/goigc/test_coverage)
 ![Project Status](http://img.shields.io/badge/status-alpha-red.svg)
+
 
 Go library for processing and manipulating [IGC](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
 files.
