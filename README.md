@@ -8,12 +8,9 @@
 ![Project Status](http://img.shields.io/badge/status-alpha-red.svg)
 
 
-Go library for processing and manipulating [IGC] files(https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
+Go library for processing and manipulating [IGC](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
 files.
 
-Note:
-This is a fork from original project by [Ricardo Rocha](https://github.com/rochaporto) 
-[https://github.com/ezgliding/goigc](https://github.com/ezgliding/goigc)
 
 ## Current version
 
@@ -49,6 +46,12 @@ func main() {
 
 
 ## Resources
+    
+* [Latest IGC technical spec](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf). 
+The IGC file specification is provided by FAI and IGC standarization committes and 
+should be used as a reference. See section A9 for the example of IGC file.
+* An example IGC files can be downloaded from [XContest.org](http://xcontest.org), eg. [a short flight](https://www.xcontest.org/track.php?t=1533585909.37.igc)
+* [IGC Waypoint format](https://www.fai.org/sites/default/files/documents/wpformat.pdf) (useful for fields specs)
 
 
 
@@ -61,11 +64,16 @@ go test -update .
 
 ## Documentation
 
-    $ godoc github.com/marni/goigc
-    
-* [Latest IGC technical spec](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf). 
-The IGC file specification is provided by FAI and IGC standarization committes and 
-should be used as a reference. See section A9 for the example of IGC file.
-* An example IGC files can be downloaded from [XContest.org](http://xcontest.org), eg. [a short flight](https://www.xcontest.org/track.php?t=1533585909.37.igc)
-* [IGC Waypoint format](https://www.fai.org/sites/default/files/documents/wpformat.pdf) (useful for fields specs)
+    $ godoc github.com/igcfs/go-igc
 
+
+## Acknowledgements
+
+This is a fork from original project by [Ricardo Rocha](https://github.com/rochaporto) 
+[https://github.com/ezgliding/goigc](https://github.com/ezgliding/goigc)
+
+
+
+## Contributing
+
+Any form of contribution is more than welcome. Please create pull requests, contribute to the Wiki pages, or gives us heads up about ongoing projects that make use of this library. Any suggestions or feedback through email or issue tracker.
