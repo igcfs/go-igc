@@ -1,18 +1,18 @@
-# goigc
+# go-igc
 
-[![Build Status](https://travis-ci.org/marni/goigc.svg?branch=master)](http://travis-ci.org/marni/goigc)
-[![Coverage Status](https://coveralls.io/repos/github/marni/goigc/badge.svg?branch=master)](https://coveralls.io/github/marni/goigc?branch=master) 
-[![GoDoc](https://godoc.org/github.com/marni/goigc?status.png)](https://godoc.org/github.com/marni/goigc) [![Go 
-Report Card](https://goreportcard.com/badge/github.com/marni/goigc)](https://goreportcard.com/report/github.com/marni/goigc)
-[![Maintainability](https://api.codeclimate.com/v1/badges/37f1652a2d83bf0d3de4/maintainability)](https://codeclimate.com/github/marni/goigc/maintainability) 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/37f1652a2d83bf0d3de4/test_coverage)](https://codeclimate.com/github/marni/goigc/test_coverage)
+[![Build Status](https://travis-ci.org/igcfs/go-igc.svg?branch=master)](http://travis-ci.org/igcfs/go-igc)
+[![Coverage Status](https://coveralls.io/repos/github/igcfs/go-igc/badge.svg?branch=master)](https://coveralls.io/github/igcfs/go-igc?branch=master) 
+[![GoDoc](https://godoc.org/github.com/igcfs/go-igc?status.png)](https://godoc.org/github.com/igcfs/go-igc) [![Go Report Card](https://goreportcard.com/badge/github.com/igcfs/go-igc)](https://goreportcard.com/report/github.com/igcfs/go-igc)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ea02bf3c04e959e3cbe5/maintainability)](https://codeclimate.com/github/marni/goigc/maintainability) 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ea02bf3c04e959e3cbe5/test_coverage)](https://codeclimate.com/github/igcfs/go-igc/test_coverage)
 ![Project Status](http://img.shields.io/badge/status-alpha-red.svg)
 
 
-Go library for processing and manipulating [IGC](https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
+Go library for processing and manipulating [IGC] files(https://www.fai.org/sites/default/files/documents/igc_fr_spec_with_al4a_2016-4-10.pdf) 
 files.
 
-Forked from original project by [Ricardo Rocha](https://github.com/rochaporto) 
+Note:
+This is a fork from original project by [Ricardo Rocha](https://github.com/rochaporto) 
 [https://github.com/ezgliding/goigc](https://github.com/ezgliding/goigc)
 
 ## Current version
@@ -32,7 +32,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/marni/goigc"
+	"github.com/igcfs/go-igc"
 )
 
 func main() {
